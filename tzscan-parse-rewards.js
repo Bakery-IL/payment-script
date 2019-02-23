@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const fetch = require('node-fetch');
-
+require('dotenv').config();
+const bakeryAddress = process.env.BAKERY_ADDRESS;
 main().catch(e => console.error(e) || process.exit(1));
 
 async function main() {
@@ -12,7 +13,7 @@ async function main() {
   }
   const pageSize = 50
   const fee = 5 / 100;
-  const pageUrlBuilder = (cycle, page, size = pageSize) => `https://api${Math.floor(Math.random() * 6 + 1)}.tzscan.io/v3/rewards_split/tz1cYufsxHXJcvANhvS55h3aY32a9BAFB494?cycle=${cycle}&p=${page}&number=${size}`
+  const pageUrlBuilder = (cycle, page, size = pageSize) => `https://api${Math.floor(Math.random() * 6 + 1)}.tzscan.io/v3/rewards_split/${bakeryAddress}?cycle=${cycle}&p=${page}&number=${size}`
 
   const { rewards, stakingBalance, numberOfPages } = await handlePage0();
   // console.log({ rewards, stakingBalance, numberOfPages });

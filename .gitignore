@@ -2,3 +2,5 @@ node_modules/
 *.error
 *.log
 cycle-*
+backerei.json
+.env
