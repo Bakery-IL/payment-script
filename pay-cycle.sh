@@ -6,29 +6,18 @@ if [ -z "$1" ]
     exit 1
 fi
 cycle=$1
-# backerei_output=./cycle-$cycle
+transactions_file=./cycle-$cycle
 
-# command -v backerei >/dev/null 2>&1 || { echo >&2 "I require backerei but it's not installed.  Aborting."; exit 1; }
-
-backerei payouts
-
+echo "Generating transactions file"
+./tzscan-parse-rewards.js $cycle > $transactions_file
 ## check if backerei returns ok
-backereiReturnVal=$?
-if [ $backereiReturnVal -ne 0 ]; then
-    echo "Error while running backerei"
-    exit $backereiReturnVal
+parseReturnVal=$?
+if [ $parseReturnVal -ne 0 ]; then
+    echo "Error while running parse"
+    cat $transactions_file
+    exit $parseReturnVal
 fi
 
 
-./generate_pay_input $cycle ~/.backerei.json > $backerei_output
-
-## check if backerei returns ok
-generateReturnVal=$?
-if [ $generateReturnVal -ne 0 ]; then
-    echo "Error while running generate"
-    cat $backerei_output
-    exit $backereiReturnVal
-fi
-
-
-./pay.sh --use bakepay --transactions-file $backerei_output
+echo "Running payment script"
+./pay.sh --use bakepay --transactions-file $transactions_file
