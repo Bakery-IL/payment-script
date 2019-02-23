@@ -23,9 +23,9 @@ async function main() {
   async function handlePage0() {
     const response = await fetchUrl(pageUrlBuilder(cycle, 0, 0), 0);
     const { delegate_staking_balance, blocks_rewards, endorsements_rewards, revelation_rewards, delegators_nb } = response;
-    const rewards = (+blocks_rewards + +endorsements_rewards + +revelation_rewards) * Math.pow(10, -6);
+    const rewards = (Number(blocks_rewards) + Number(endorsements_rewards) + Number(revelation_rewards));
     const numberOfPages = Math.ceil(delegators_nb / pageSize);
-    return { rewards, stakingBalance: delegate_staking_balance * (Math.pow(10, -6)), numberOfPages };
+    return { rewards, stakingBalance: Number(delegate_staking_balance), numberOfPages };
   }
 
   async function handleUrl(url, index) {
@@ -36,7 +36,7 @@ async function main() {
   }
 
   function calculateDelegatorReward({ account, balance }) {
-    const share = +balance * Math.pow(10, -6) / stakingBalance;
+    const share = Number(balance) / stakingBalance;
     const reward = share * rewards * (1 - fee);
     // console.log(`account: ${account.tz}, share: ${share}, reward: ${reward}`)
     return `${account.tz}=${reward}`;
