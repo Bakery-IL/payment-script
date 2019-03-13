@@ -27,10 +27,36 @@ async function main() {
 
   async function handlePage0() {
     const response = await fetchUrl(pageUrlBuilder(cycle, 0, 0), 0);
-    const { delegate_staking_balance, blocks_rewards, endorsements_rewards, revelation_rewards, delegators_nb } = response;
-    const rewards = (Number(blocks_rewards) + Number(endorsements_rewards) + Number(revelation_rewards));
+    const { delegate_staking_balance, delegators_nb } = response;
+    const rewards = sumRewards(response);
     const numberOfPages = Math.ceil(delegators_nb / pageSize);
     return { rewards, stakingBalance: Number(delegate_staking_balance), numberOfPages };
+  }
+
+  function sumRewards({
+    blocks_rewards,
+    endorsements_rewards,
+    revelation_rewards,
+    fees,
+    gain_from_denounciation,
+    lost_deposit_from_denounciation,
+    lost_rewards_denounciation,
+    lost_fees_denounciation,
+    lost_revelation_rewards,
+    lost_revelation_fees,
+  }) {
+    return (
+      +blocks_rewards +
+      +endorsements_rewards +
+      +fees +
+      +gain_from_denounciation -
+      +lost_deposit_from_denounciation -
+      +lost_rewards_denounciation -
+      +lost_fees_denounciation +
+      +revelation_rewards -
+      +lost_revelation_rewards -
+      +lost_revelation_fees
+    );
   }
 
   async function handleUrl(url, index) {
