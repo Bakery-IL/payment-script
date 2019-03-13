@@ -13,7 +13,11 @@ async function main() {
   }
   const pageSize = 50;
   const fee = 5 / 100;
-  const pageUrlBuilder = (cycle, page, size = pageSize) => `https://api${Math.floor(Math.random() * 6 + 1)}.tzscan.io/v3/rewards_split/${bakeryAddress}?cycle=${cycle}&p=${page}&number=${size}`
+
+  const pageUrlBuilder = (cycle, page, size = pageSize) => {
+    const apiNumber = Math.floor(Math.random() * 3 + 1);
+    return `https://api${apiNumber}.tzscan.io/v3/rewards_split/${bakeryAddress}?cycle=${cycle}&p=${page}&number=${size}`;
+  };
 
   const { rewards, stakingBalance, numberOfPages } = await handlePage0();
   // console.log({ rewards, stakingBalance, numberOfPages });
