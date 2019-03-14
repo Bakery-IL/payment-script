@@ -13,7 +13,6 @@ async function main() {
   }
   const pageSize = 50;
   const fee = 5 / 100;
-
   const pageUrlBuilder = (cycle, page, size = pageSize) => {
     const apiNumber = Math.floor(Math.random() * 3 + 1);
     return `https://api${apiNumber}.tzscan.io/v3/rewards_split/${bakeryAddress}?cycle=${cycle}&p=${page}&number=${size}`;
@@ -63,12 +62,15 @@ async function main() {
     // console.log(`getting page ${index}`)
     const response = await fetchUrl(url, index);
     const delegatorsRewards = response.delegators_balance.map(calculateDelegatorReward);
-    return delegatorsRewards.join('\n');
+    return delegatorsRewards.filter(i => i).join('\n');
   }
 
   function calculateDelegatorReward({ account, balance }) {
     const share = Number(balance) / stakingBalance;
-    const reward = share * rewards * (1 - fee);
+    const reward = Math.ceil(share * rewards * (1 - fee));
+    if (!reward) {
+      return '';
+    }
     // console.log(`account: ${account.tz}, share: ${share}, reward: ${reward}`)
     return `${account.tz}=${reward}`;
   }
