@@ -20,7 +20,7 @@ async function main() {
 
   const { rewards, stakingBalance, numberOfPages } = await handlePage0();
   // console.log({ rewards, stakingBalance, numberOfPages });
-  pages = Array.from({ length: numberOfPages }, (_, k) => pageUrlBuilder(cycle, k));
+  const pages = Array.from({ length: numberOfPages }, (_, k) => pageUrlBuilder(cycle, k));
   const rewardsSplit = await Promise.all(pages.map(handleUrl));
   console.log(rewardsSplit.reduce((arr, cur) => arr.concat(cur), []).join('\n'));
 
