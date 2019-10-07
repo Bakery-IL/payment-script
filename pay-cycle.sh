@@ -10,7 +10,7 @@ transactions_file=./cycle-$cycle
 
 echo "Generating transactions file"
 ./tzscan-parse-rewards.js $cycle > $transactions_file
-## check if backerei returns ok
+
 parseReturnVal=$?
 if [ $parseReturnVal -ne 0 ]; then
     echo "Error while running parse"
